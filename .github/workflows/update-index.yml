@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "nouveau-index.html"
+      - "listes-partenaires.html"
 
 jobs:
   deploy:
@@ -13,9 +13,16 @@ jobs:
       - name: Checkout du dépôt
         uses: actions/checkout@v3
 
+      - name: Configurer l'utilisateur Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
       - name: Remplacer le fichier index.html
         run: |
-          mv nouveau-index.html index.html
+          mv listes-partenaires.html index.html
           git add index.html
           git commit -m "Mise à jour automatique des listes"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
