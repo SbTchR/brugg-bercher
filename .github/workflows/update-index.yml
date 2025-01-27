@@ -23,6 +23,6 @@ jobs:
           mv listes-partenaires.html index.html
           git add index.html
           git commit -m "Mise à jour automatique des listes"
-          git push
-        env:
+          git push origin main --force
+    env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
