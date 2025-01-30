@@ -21,7 +21,7 @@ jobs:
       - name: Remplacer le fichier index.html
         run: |
           mv listes-partenaires.html listes.html
-          git add index.html
+          git add listes.html
           git commit -m "Mise à jour automatique des listes"
           git push origin main --force
     env:
