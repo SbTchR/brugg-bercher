@@ -16,7 +16,24 @@
     </head>
     <body>
       <h1>Listes des Partenaires</h1>
-  
+  <label for="select-class">Sélectionnez une classe/groupe :</label>
+<select id="select-class">
+  <option value="all">Toutes les classes</option>
+</select>
+<button id="btn-export-pdf">Exporter en PDF</button>
+<button id="btn-copy-list">Copier la liste</button>
+<table id="partners-table">
+  <thead>
+    <tr>
+      <th>Élève</th>
+      <th>Partenaire(s)</th>
+      <th>Classe/Groupe du partenaire</th>
+    </tr>
+  </thead>
+  <tbody id="partners-table-body">
+    <!-- Les données seront injectées ici -->
+  </tbody>
+</table>
       <div class="class-section">
         <div class="class-header">Classe/Groupe : 9VG1</div>
         <table>
@@ -7054,7 +7071,89 @@
           </tbody>
         </table>
       </div>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const selectClass = document.getElementById("select-class");
+  const tableBody = document.getElementById("partners-table-body");
+  const btnExportPdf = document.getElementById("btn-export-pdf");
+  const btnCopyList = document.getElementById("btn-copy-list");
+
+  let classData = {}; // Stocke les données des classes pour le filtrage
+
+  // Charger les données et remplir le menu déroulant
+  fetch("listes-partenaires.html") // Modifie ici si ton fichier HTML a un autre nom
+    .then(response => response.text())
+    .then(html => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const sections = doc.querySelectorAll(".class-section");
+
+      sections.forEach(section => {
+        const className = section.querySelector(".class-header").textContent.replace("Classe/Groupe : ", "").trim();
+        const rows = section.querySelectorAll("tbody tr");
+        classData[className] = rows;
+
+        // Ajout des classes au menu déroulant
+        const option = document.createElement("option");
+        option.value = className;
+        option.textContent = className;
+        selectClass.appendChild(option);
+      });
+
+      updateTable("all");
+    });
+
+  // Filtrer les classes selon le choix dans le menu déroulant
+  selectClass.addEventListener("change", () => {
+    updateTable(selectClass.value);
+  });
+
+  function updateTable(selectedClass) {
+    tableBody.innerHTML = "";
+    if (selectedClass === "all") {
+      Object.values(classData).forEach(rows => {
+        rows.forEach(row => tableBody.appendChild(row.cloneNode(true)));
+      });
+    } else {
+      classData[selectedClass].forEach(row => tableBody.appendChild(row.cloneNode(true)));
+    }
+  }
+
+  // Fonction pour exporter la liste en PDF
+  btnExportPdf.addEventListener("click", () => {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+    pdf.text("Liste des partenaires", 10, 10);
     
+    let y = 20;
+    tableBody.querySelectorAll("tr").forEach((row) => {
+      const cols = row.querySelectorAll("td");
+      let rowData = "";
+      cols.forEach(col => rowData += col.textContent + " | ");
+      pdf.text(rowData, 10, y);
+      y += 10;
+    });
+
+    pdf.save("liste-partenaires.pdf");
+  });
+
+  // Fonction pour copier la liste dans le presse-papiers
+  btnCopyList.addEventListener("click", () => {
+    let textToCopy = "";
+    tableBody.querySelectorAll("tr").forEach((row) => {
+      const cols = row.querySelectorAll("td");
+      let rowData = "";
+      cols.forEach(col => rowData += col.textContent + "\t");
+      textToCopy += rowData + "\n";
+    });
+
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => alert("Liste copiée !"))
+      .catch(err => console.error("Erreur de copie :", err));
+  });
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     </body>
     </html>
   
