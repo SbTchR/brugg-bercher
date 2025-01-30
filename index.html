@@ -69,27 +69,36 @@
         });
       }
 
-      // Fonction pour exporter le tableau en PDF
-      btnExportPdf.addEventListener("click", () => {
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF();
+     // Fonction pour exporter le tableau en PDF
+btnExportPdf.addEventListener("click", () => {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
 
-        pdf.text("Liste des partenaires", 14, 10);
+    pdf.setFontSize(16);
+    pdf.text("Liste des partenaires", 14, 10);
 
-        const tables = listesContainer.querySelectorAll(".class-section");
-        tables.forEach(section => {
-          if (section.style.display !== "none") {
+    const tables = listesContainer.querySelectorAll(".class-section");
+    tables.forEach(section => {
+        if (section.style.display !== "none") {
             const table = section.querySelector("table");
-            pdf.autoTable({
-              html: table,
-              startY: pdf.lastAutoTable ? pdf.lastAutoTable.finalY + 10 : 20,
-              theme: "grid"
-            });
-          }
-        });
 
-        pdf.save("liste-partenaires.pdf");
-      });
+            // Récupérer le nom de la classe/groupe
+            const className = section.querySelector(".class-header").textContent.trim();
+
+            // Ajouter le nom de la classe avant le tableau
+            pdf.setFontSize(12);
+            pdf.text(`Classe/Groupe : ${className}`, 14, pdf.lastAutoTable ? pdf.lastAutoTable.finalY + 10 : 20);
+
+            pdf.autoTable({
+                html: table,
+                startY: pdf.lastAutoTable ? pdf.lastAutoTable.finalY + 20 : 30,
+                theme: "grid"
+            });
+        }
+    });
+
+    pdf.save("liste-partenaires.pdf");
+});
 
       // Fonction pour copier la liste dans le presse-papiers
       btnCopyList.addEventListener("click", () => {
