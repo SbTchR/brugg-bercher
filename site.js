@@ -677,13 +677,18 @@ function getUniqueId(baseId, items) {
 function sanitizeRichHtml(html) {
   const template = document.createElement("template");
   template.innerHTML = html || "";
-  const allowedTags = new Set(["B", "STRONG", "I", "EM", "U", "BR", "P", "DIV", "SPAN", "UL", "OL", "LI"]);
+
+  const allowedTags = new Set(["B","STRONG","I","EM","U","BR","P","DIV","SPAN","UL","OL","LI","A","IMG"]);
+  const allowedAttrs = {
+    "*": ["class","style"],
+    "A": ["href","target","rel","class","style"],
+    "IMG": ["src","alt","class","style"]
+  };
+  const allowedStyles = new Set(["color","background-color","font-weight","font-style","text-decoration","text-align","font-size"]);
+
   const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_ELEMENT);
   const nodes = [];
-
-  while (walker.nextNode()) {
-    nodes.push(walker.currentNode);
-  }
+  while (walker.nextNode()) nodes.push(walker.currentNode);
 
   nodes.forEach((node) => {
     if (!allowedTags.has(node.tagName)) {
@@ -691,19 +696,35 @@ function sanitizeRichHtml(html) {
       return;
     }
 
-    Array.from(node.attributes).forEach((attribute) => {
-      if (attribute.name !== "style") {
-        node.removeAttribute(attribute.name);
+    Array.from(node.attributes).forEach((attr) => {
+      const name = attr.name.toLowerCase();
+      const allowedForTag = (allowedAttrs[node.tagName] || []).map(s => s.toLowerCase()).concat((allowedAttrs["*"]||[]).map(s => s.toLowerCase()));
+      if (!allowedForTag.includes(name)) {
+        node.removeAttribute(attr.name);
+        return;
+      }
+
+      if ((name === "href" || name === "src") && attr.value) {
+        const v = attr.value.trim();
+        if (!/^(https?:|mailto:|\/|data:)/i.test(v)) {
+          node.removeAttribute(attr.name);
+        }
+      }
+
+      if (name === "style") {
+        const style = node.style;
+        const kept = [];
+        allowedStyles.forEach((prop) => {
+          const val = style.getPropertyValue(prop);
+          if (val) kept.push(`${prop}:${val}`);
+        });
+        if (kept.length) {
+          node.setAttribute("style", kept.join(";"));
+        } else {
+          node.removeAttribute("style");
+        }
       }
     });
-
-    if (node.hasAttribute("style")) {
-      const color = node.style.color;
-      node.removeAttribute("style");
-      if (color) {
-        node.style.color = color;
-      }
-    }
   });
 
   return template.innerHTML.trim();
