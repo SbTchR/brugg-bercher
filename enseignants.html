@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enseignants - Bercher-Brugg</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f6f78'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='24' font-weight='700' fill='white'%3EBB%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Accueil Bercher-Brugg">
+      <span class="brand-mark">BB</span>
+      <span>
+        <strong>Bercher-Brugg</strong>
+        <small>Échange linguistique</small>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="partenaires.html">Listes</a>
+      <a href="enseignants.html" aria-current="page">Enseignants</a>
+      <a href="actualites.html">Actualités</a>
+      <a href="https://sbtchr.github.io/bbcal/">Calendrier</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-intro">
+      <p class="section-label">Contacts</p>
+      <h1>Enseignants</h1>
+      <p>Cette page sert de carnet d'adresses commun pour retrouver rapidement les collègues impliqués dans l'échange.</p>
+    </section>
+
+    <section class="teacher-grid" id="teacher-grid" aria-label="Cartes de profil des enseignants"></section>
+
+    <section class="page-tools admin-tools" aria-label="Gestion des enseignants">
+      <button id="teacher-edit" type="button">Éditer</button>
+      <button class="button subtle" id="teacher-export" type="button">Exporter les fiches</button>
+      <button class="button subtle" id="teacher-reset" type="button">Revenir aux données publiées</button>
+    </section>
+
+    <section class="editor-panel is-hidden" id="teacher-editor" aria-labelledby="teacher-editor-title">
+      <div>
+        <h2 id="teacher-editor-title">Modifier une fiche enseignant</h2>
+        <p><strong>Zone d'administration.</strong> Seul l'admin du site doit modifier ces fiches. Les changements sont enregistrés dans ce navigateur; la photo est incluse dans le fichier JSON exporté.</p>
+      </div>
+      <form class="editor-form" id="teacher-form">
+        <input type="hidden" id="teacher-id">
+        <div class="form-grid">
+          <label>
+            Enseignant
+            <select id="teacher-select">
+              <option value="">Choisir une fiche</option>
+            </select>
+          </label>
+          <label>
+            École
+            <select id="teacher-school" required>
+              <option value="Bercher">Bercher</option>
+              <option value="Brugg">Brugg</option>
+            </select>
+          </label>
+          <label>
+            Nom complet
+            <input id="teacher-name" type="text" required>
+          </label>
+          <label>
+            Adresse mail
+            <input id="teacher-email" type="email" required>
+          </label>
+        </div>
+        <label>
+          Texte personnel
+          <textarea id="teacher-description" rows="4" placeholder="Quelques mots sur votre rôle dans l'échange ou votre manière de voir le projet."></textarea>
+        </label>
+        <label>
+          Photo
+          <input id="teacher-photo" type="file" accept="image/*">
+        </label>
+        <div class="editor-actions">
+          <button type="submit">Enregistrer la fiche</button>
+          <button class="button subtle" id="teacher-new-entry" type="button">Nouvelle fiche</button>
+          <button class="button subtle" id="teacher-clear-photo" type="button">Retirer la photo</button>
+          <button class="button danger" id="teacher-delete" type="button">Supprimer la fiche</button>
+          <button class="button subtle" id="teacher-cancel" type="button">Fermer</button>
+        </div>
+        <p class="editor-status" id="teacher-status" aria-live="polite"></p>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Échange linguistique Bercher-Brugg</p>
+    <p>Les modifications locales peuvent être exportées pour publication.</p>
+  </footer>
+
+  <script src="site.js"></script>
+</body>
+</html>

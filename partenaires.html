@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listes des partenaires - Bercher-Brugg</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f6f78'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='24' font-weight='700' fill='white'%3EBB%3C/text%3E%3C/svg%3E">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Accueil Bercher-Brugg">
+      <span class="brand-mark">BB</span>
+      <span>
+        <strong>Bercher-Brugg</strong>
+        <small>Échange linguistique</small>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="partenaires.html" aria-current="page">Listes</a>
+      <a href="enseignants.html">Enseignants</a>
+      <a href="actualites.html">Actualités</a>
+      <a href="https://sbtchr.github.io/bbcal/">Calendrier</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-intro">
+      <p class="section-label">Listes actualisées</p>
+      <h1>Listes des partenaires</h1>
+      <p>Les listes de partenaires doivent être à jour en permanence sur ce site. Il faut annoncer les modifications à faire à Sylvain au fur et à mesure.<br><br><strong>⚠️ Elèves particuliers :</strong><br>Si un élève est très souvent absent ou particulièrement récalcitrant pour l'écriture des lettres, nous pouvons lui retirer son correspondant ou attribuer celui-ci à un autre élève en plus afin d'éviter qu'un élève ne reçoive jamais de lettre. N'hésitez donc pas aussi à signaler ce genre de cas.</p>
+    </section>
+
+    <section class="list-tool" aria-labelledby="list-tool-title">
+      <div class="tool-header">
+        <div>
+          <h2 id="list-tool-title">Consultation rapide</h2>
+          <p id="list-status">Chargement des listes...</p>
+        </div>
+        <div class="tool-actions">
+          <button id="btn-export-pdf" type="button">Exporter en PDF</button>
+          <button id="btn-copy-list" type="button">Copier la liste</button>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <label for="select-class">Classe ou groupe</label>
+        <select id="select-class">
+          <option value="all">Toutes les classes</option>
+        </select>
+      </div>
+
+      <div id="listes-container" class="partner-lists" aria-live="polite"></div>
+      <p class="fallback-note">Si les listes ne se chargent pas, ouvrez le fichier source: <a href="listes.html">listes.html</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Échange linguistique Bercher-Brugg</p>
+    <p>Les listes restent mises à jour via le fichier généré par l'application locale.</p>
+  </footer>
+
+  <script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+[
+  {
+    "id": "sylvain-bovat",
+    "name": "Sylvain Bovat",
+    "school": "Bercher",
+    "email": "sylvain.bovat@edu-vd.ch",
+    "description": "Pour moi, l'échange c'est avant tout l'ouverture à l'autre et le contact humain, deux choses indispensables pour aimer une langue.",
+    "photo": ""
+  },
+  {
+    "id": "michaela-stalder",
+    "name": "Michaela Stalder",
+    "school": "Brugg",
+    "email": "michaela.stalder@schule-brugg.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "melanie-peclard",
+    "name": "Mélanie Péclard",
+    "school": "Bercher",
+    "email": "melanie.peclard@edu-vd.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "daniela-winterhofen",
+    "name": "Daniela Winterhofen",
+    "school": "Brugg",
+    "email": "daniela.winterhofen@schule-brugg.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "juliette-bourquin",
+    "name": "Juliette Bourquin",
+    "school": "Bercher",
+    "email": "juliette.bourquin@edu-vd.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "tanja-martin",
+    "name": "Tanja Martin",
+    "school": "Brugg",
+    "email": "tanja.martin@schule-brugg.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "aurelie-moullet",
+    "name": "Aurélie Moullet",
+    "school": "Bercher",
+    "email": "aurelie.moullet@edu-vd.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "viola-eisinger",
+    "name": "Viola Eisinger",
+    "school": "Brugg",
+    "email": "viola.eisinger@schule-brugg.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "dana-chapuis",
+    "name": "Dana Chapuis",
+    "school": "Bercher",
+    "email": "dana.chapuis@edu-vd.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "nicole-tremp",
+    "name": "Nicole Tremp",
+    "school": "Brugg",
+    "email": "nicole.tremp@schule-brugg.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "raphael-blanchard",
+    "name": "Raphaël Blanchard",
+    "school": "Bercher",
+    "email": "raphael.blanchard@edu-vd.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "ananda-coelho",
+    "name": "Ananda Coelho",
+    "school": "Brugg",
+    "email": "ananda.coelho@schule-brugg.ch",
+    "description": "",
+    "photo": ""
+  },
+  {
+    "id": "marc-chablaix",
+    "name": "Marc Chablaix",
+    "school": "Bercher",
+    "email": "marc.chablaix@edu-vd.ch",
+    "description": "",
+    "photo": ""
+  }
+]

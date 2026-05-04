@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Actualités - Bercher-Brugg</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f6f78'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='24' font-weight='700' fill='white'%3EBB%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Accueil Bercher-Brugg">
+      <span class="brand-mark">BB</span>
+      <span>
+        <strong>Bercher-Brugg</strong>
+        <small>Échange linguistique</small>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="partenaires.html">Listes</a>
+      <a href="enseignants.html">Enseignants</a>
+      <a href="actualites.html" aria-current="page">Actualités</a>
+      <a href="https://sbtchr.github.io/bbcal/">Calendrier</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-intro">
+      <p class="section-label">Messages importants</p>
+      <h1>Actualités de l'échange</h1>
+      <p>Copiez ici les informations importantes envoyées par mail afin que les collègues puissent les retrouver facilement.</p>
+    </section>
+
+    <section class="news-page-list" id="news-list" aria-label="Liste des actualités"></section>
+
+    <section class="page-tools admin-tools" aria-label="Gestion des actualités">
+      <button id="news-edit" type="button">Éditer</button>
+      <button class="button subtle" id="news-export" type="button">Exporter les actualités</button>
+      <button class="button subtle" id="news-reset" type="button">Revenir aux données publiées</button>
+    </section>
+
+    <section class="editor-panel is-hidden" id="news-editor" aria-labelledby="news-editor-title">
+      <div>
+        <h2 id="news-editor-title">Créer ou modifier une actualité</h2>
+        <p>Les changements sont enregistrés dans ce navigateur. Pour les publier pour tout le monde, exportez les données puis remplacez le fichier <strong>data/actualites.json</strong> dans le dépôt.</p>
+      </div>
+      <form class="editor-form" id="news-form">
+        <input type="hidden" id="news-id">
+        <label>
+          Actualité à modifier
+          <select id="news-select">
+            <option value="">Nouvelle actualité</option>
+          </select>
+        </label>
+        <div class="form-grid">
+          <label>
+            Date
+            <input id="news-date" type="date" required>
+          </label>
+          <label>
+            Public cible
+            <input id="news-audience" type="text" placeholder="Tous les collègues concernés">
+          </label>
+        </div>
+        <label>
+          Titre
+          <input id="news-title" type="text" required>
+        </label>
+        <div class="field-group">
+          <span class="field-label" id="news-body-label">Message</span>
+          <span class="rich-toolbar" aria-label="Mise en forme du message">
+            <button type="button" data-format="bold">Gras</button>
+            <button type="button" data-format="italic">Italique</button>
+            <button type="button" data-format="underline">Souligner</button>
+            <input id="news-color" type="color" value="#0f6f78" aria-label="Couleur du texte">
+          </span>
+          <div id="news-body" class="rich-editor" contenteditable="true" role="textbox" aria-labelledby="news-body-label" aria-multiline="true" data-placeholder="Copiez ici le message important à garder sur le site."></div>
+        </div>
+        <div class="editor-actions">
+          <button type="submit">Enregistrer l'actualité</button>
+          <button class="button subtle" id="news-new-entry" type="button">Nouvelle actualité</button>
+          <button class="button danger" id="news-delete" type="button">Supprimer cette actualité</button>
+          <button class="button subtle" id="news-cancel" type="button">Fermer</button>
+        </div>
+        <p class="editor-status" id="news-status" aria-live="polite"></p>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Échange linguistique Bercher-Brugg</p>
+    <p>Ajoutez les nouvelles annonces en haut de la liste.</p>
+  </footer>
+
+  <script src="site.js"></script>
+</body>
+</html>
