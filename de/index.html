@@ -82,6 +82,10 @@
           <h2>Klassenzuteilung</h2>
         </div>
 
+        <button class="button subtle organisation-button" type="button" data-organisation-open>
+          Organisation Bercher
+        </button>
+
         <div class="table-wrap">
           <table class="info-table">
             <thead>
@@ -152,6 +156,17 @@
     <p>Sprachaustausch Bercher-Brugg</p>
     <p>Interne Referenzseite für Lehrpersonen.</p>
   </footer>
+  <dialog class="organisation-dialog" aria-labelledby="organisation-dialog-title">
+    <div class="organisation-dialog-header">
+      <h2 id="organisation-dialog-title">Organisation Bercher</h2>
+      <button class="dialog-close" type="button" data-organisation-close aria-label="Fenster schliessen">Schliessen</button>
+    </div>
+    <iframe
+      class="organisation-frame"
+      title="Grafik Organisation Bercher"
+      data-src="FonctionnementBercher.html"
+    ></iframe>
+  </dialog>
   <script src="../site.js"></script>
 </body>
 </html>
