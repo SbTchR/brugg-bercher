@@ -3,6 +3,62 @@ const STORAGE_KEYS = {
   news: "bruggBercherNews"
 };
 
+const SITE_BASE_PATH = document.body ? document.body.dataset.basePath || "" : "";
+const SITE_LANG = document.documentElement.lang && document.documentElement.lang.startsWith("de") ? "de" : "fr";
+
+const UI_TEXT = {
+  fr: {
+    loadingLists: "Chargement des listes...",
+    listsUnavailableTitle: "Listes indisponibles",
+    listsUnavailableText: "Le fichier listes.html n'a pas pu être chargé. Vous pouvez essayer de l'ouvrir directement avec le lien ci-dessous.",
+    noClass: "Classe sans nom",
+    visibleListStatus: (sections, rows) => `${sections} classe(s) affichée(s), ${rows} ligne(s) de partenaires.`,
+    exportUnavailable: "L'export PDF n'est pas encore disponible. Vérifiez la connexion internet et réessayez.",
+    partnerListPdfTitle: "Liste des partenaires",
+    classGroup: "Classe/Groupe",
+    listCopied: "Liste copiée dans le presse-papiers.",
+    copyFailed: "La copie automatique n'a pas fonctionné dans ce navigateur.",
+    teacherSelectPrompt: "Choisir une fiche",
+    teacherFallback: "Texte personnel à compléter.",
+    newsTarget: "Public cible",
+    defaultAudience: "Tous les collègues concernés",
+    newNews: "Nouvelle actualité",
+    addMessage: "Ajoutez un message avant d'enregistrer l'actualité.",
+    newsSaved: "Actualité enregistrée dans ce navigateur.",
+    chooseNewsFirst: "Choisissez d'abord une actualité existante à modifier.",
+    deleteNewsConfirm: (title) => `Supprimer l'actualité "${title}" ?`,
+    newsDeleted: "Actualité supprimée dans ce navigateur. Exportez le JSON pour publier la suppression.",
+    newsExported: "Fichier actualites.json exporté.",
+    resetNewsConfirm: "Revenir aux actualités publiées et oublier les modifications locales ?",
+    publishedDataRestored: "Données publiées restaurées."
+  },
+  de: {
+    loadingLists: "Listen werden geladen...",
+    listsUnavailableTitle: "Listen nicht verfügbar",
+    listsUnavailableText: "Die Datei listes.html konnte nicht geladen werden. Sie können versuchen, sie direkt über den Link unten zu öffnen.",
+    noClass: "Klasse ohne Namen",
+    visibleListStatus: (sections, rows) => `${sections} Klasse(n) angezeigt, ${rows} Partnerzeile(n).`,
+    exportUnavailable: "Der PDF-Export ist noch nicht verfügbar. Prüfen Sie die Internetverbindung und versuchen Sie es erneut.",
+    partnerListPdfTitle: "Partnerlisten",
+    classGroup: "Klasse/Gruppe",
+    listCopied: "Liste in die Zwischenablage kopiert.",
+    copyFailed: "Das automatische Kopieren hat in diesem Browser nicht funktioniert.",
+    teacherSelectPrompt: "Eintrag wählen",
+    teacherFallback: "Persönlicher Text noch zu ergänzen.",
+    newsTarget: "Zielgruppe",
+    defaultAudience: "Alle betroffenen Kolleginnen und Kollegen",
+    newNews: "Neue Meldung",
+    addMessage: "Fügen Sie eine Nachricht hinzu, bevor Sie die Meldung speichern.",
+    newsSaved: "Meldung in diesem Browser gespeichert.",
+    chooseNewsFirst: "Wählen Sie zuerst eine bestehende Meldung aus.",
+    deleteNewsConfirm: (title) => `Meldung "${title}" löschen?`,
+    newsDeleted: "Meldung in diesem Browser gelöscht. Exportieren Sie die JSON-Datei, um die Löschung zu veröffentlichen.",
+    newsExported: "Datei actualites.json exportiert.",
+    resetNewsConfirm: "Zu den veröffentlichten Meldungen zurückkehren und lokale Änderungen verwerfen?",
+    publishedDataRestored: "Veröffentlichte Daten wiederhergestellt."
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   initPartnerLists();
   initTeacherPage();
@@ -25,7 +81,7 @@ function initPartnerLists() {
     sections: []
   };
 
-  fetch("listes.html")
+  fetch(sitePath("listes.html"))
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Chargement impossible (${response.status})`);
@@ -37,12 +93,16 @@ function initPartnerLists() {
       const sections = Array.from(doc.querySelectorAll(".class-section"));
 
       if (sections.length === 0) {
-        throw new Error("Aucune classe trouvée dans listes.html");
+        throw new Error(UI_TEXT[SITE_LANG].listsUnavailableTitle);
       }
 
       listesContainer.innerHTML = "";
       sections.forEach((section) => {
         const className = getClassName(section);
+        const header = section.querySelector(".class-header");
+        if (header) {
+          header.textContent = `${UI_TEXT[SITE_LANG].classGroup} : ${className}`;
+        }
         state.sections.push({ className, element: section });
 
         const option = document.createElement("option");
@@ -57,7 +117,7 @@ function initPartnerLists() {
       updateTable("all");
     })
     .catch((error) => {
-      listesContainer.innerHTML = `<div class="info-card"><h2>Listes indisponibles</h2><p>Le fichier listes.html n'a pas pu être chargé. Vous pouvez essayer de l'ouvrir directement avec le lien ci-dessous.</p></div>`;
+      listesContainer.innerHTML = `<div class="info-card"><h2>${UI_TEXT[SITE_LANG].listsUnavailableTitle}</h2><p>${UI_TEXT[SITE_LANG].listsUnavailableText}</p></div>`;
       if (listStatus) {
         listStatus.textContent = error.message;
       }
@@ -78,7 +138,7 @@ function initPartnerLists() {
 
   function getClassName(section) {
     const header = section.querySelector(".class-header");
-    return (header ? header.textContent : "Classe sans nom")
+    return (header ? header.textContent : UI_TEXT[SITE_LANG].noClass)
       .replace("Classe/Groupe :", "")
       .trim();
   }
@@ -104,16 +164,16 @@ function initPartnerLists() {
     }, 0);
 
     if (state.sections.length === 0) {
-      listStatus.textContent = "Chargement des listes...";
+      listStatus.textContent = UI_TEXT[SITE_LANG].loadingLists;
       return;
     }
 
-    listStatus.textContent = `${visibleSections.length} classe(s) affichée(s), ${totalRows} ligne(s) de partenaires.`;
+    listStatus.textContent = UI_TEXT[SITE_LANG].visibleListStatus(visibleSections.length, totalRows);
   }
 
   function exportVisibleTables() {
     if (!window.jspdf || !window.jspdf.jsPDF) {
-      alert("L'export PDF n'est pas encore disponible. Vérifiez la connexion internet et réessayez.");
+      alert(UI_TEXT[SITE_LANG].exportUnavailable);
       return;
     }
 
@@ -121,7 +181,7 @@ function initPartnerLists() {
     const pdf = new jsPDF();
 
     pdf.setFontSize(16);
-    pdf.text("Liste des partenaires", 14, 14);
+    pdf.text(UI_TEXT[SITE_LANG].partnerListPdfTitle, 14, 14);
 
     getVisibleSections().forEach(({ className, element }, index) => {
       const table = element.querySelector("table");
@@ -131,7 +191,7 @@ function initPartnerLists() {
 
       const startY = index === 0 ? 26 : pdf.lastAutoTable.finalY + 14;
       pdf.setFontSize(12);
-      pdf.text(`Classe/Groupe : ${className}`, 14, startY);
+      pdf.text(`${UI_TEXT[SITE_LANG].classGroup} : ${className}`, 14, startY);
       pdf.autoTable({
         html: table,
         startY: startY + 6,
@@ -151,17 +211,17 @@ function initPartnerLists() {
           .join("\t");
       });
 
-      return [`Classe/Groupe : ${className}`, ...rows].join("\n");
+      return [`${UI_TEXT[SITE_LANG].classGroup} : ${className}`, ...rows].join("\n");
     }).join("\n\n");
 
     navigator.clipboard.writeText(textToCopy)
       .then(() => {
         if (listStatus) {
-          listStatus.textContent = "Liste copiée dans le presse-papiers.";
+          listStatus.textContent = UI_TEXT[SITE_LANG].listCopied;
         }
       })
       .catch(() => {
-        alert("La copie automatique n'a pas fonctionné dans ce navigateur.");
+        alert(UI_TEXT[SITE_LANG].copyFailed);
       });
   }
 }
@@ -174,7 +234,7 @@ async function initTeacherPage() {
     return;
   }
 
-  const publishedTeachers = await loadJson("data/enseignants.json", []);
+  const publishedTeachers = await loadJson(sitePath("data/enseignants.json"), []);
   let teachers = cloneData(getStoredData(STORAGE_KEYS.teachers) || publishedTeachers);
   let selectedTeacherId = "";
   let photoRemoved = false;
@@ -299,7 +359,7 @@ async function initTeacherPage() {
   });
 
   function renderTeacherOptions() {
-    fields.select.innerHTML = `<option value="">Choisir une fiche</option>`;
+    fields.select.innerHTML = `<option value="">${UI_TEXT[SITE_LANG].teacherSelectPrompt}</option>`;
     teachers.forEach((teacher) => {
       const option = document.createElement("option");
       option.value = teacher.id;
@@ -318,7 +378,7 @@ async function initTeacherPage() {
         <div>
           <p class="teacher-school">${escapeHtml(teacher.school)}</p>
           <h2>${escapeHtml(teacher.name)}</h2>
-          <p>${escapeHtml(teacher.description || "Texte personnel à compléter.")}</p>
+          <p>${escapeHtml(teacher.description || UI_TEXT[SITE_LANG].teacherFallback)}</p>
           <a href="mailto:${escapeAttribute(teacher.email)}">${escapeHtml(teacher.email)}</a>
         </div>
       `;
@@ -368,7 +428,7 @@ async function initNewsPage() {
     return;
   }
 
-  const publishedNews = await loadJson("data/actualites.json", []);
+  const publishedNews = await loadJson(sitePath("data/actualites.json"), []);
   let newsItems = normalizeNewsItems(cloneData(getStoredData(STORAGE_KEYS.news) || publishedNews));
 
   const fields = {
@@ -408,7 +468,7 @@ async function initNewsPage() {
     const existing = newsItems.find((item) => item.id === id);
     const body = sanitizeRichHtml(fields.body.innerHTML);
     if (!fields.body.textContent.trim()) {
-      setStatus(fields.status, "Ajoutez un message avant d'enregistrer l'actualité.");
+      setStatus(fields.status, UI_TEXT[SITE_LANG].addMessage);
       return;
     }
 
@@ -432,7 +492,7 @@ async function initNewsPage() {
     renderNewsOptions();
     renderNewsList();
     fillNewsForm(id);
-    setStatus(fields.status, "Actualité enregistrée dans ce navigateur.");
+    setStatus(fields.status, UI_TEXT[SITE_LANG].newsSaved);
   });
 
   fields.editButton.addEventListener("click", () => {
@@ -452,10 +512,10 @@ async function initNewsPage() {
   fields.deleteButton.addEventListener("click", () => {
     const item = newsItems.find((newsItem) => newsItem.id === fields.id.value);
     if (!item) {
-      setStatus(fields.status, "Choisissez d'abord une actualité existante à modifier.");
+      setStatus(fields.status, UI_TEXT[SITE_LANG].chooseNewsFirst);
       return;
     }
-    if (!confirm(`Supprimer l'actualité "${item.title}" ?`)) {
+    if (!confirm(UI_TEXT[SITE_LANG].deleteNewsConfirm(item.title))) {
       return;
     }
     newsItems = newsItems.filter((newsItem) => newsItem.id !== item.id);
@@ -463,7 +523,7 @@ async function initNewsPage() {
     setEmptyNewsForm();
     renderNewsOptions();
     renderNewsList();
-    setStatus(fields.status, "Actualité supprimée dans ce navigateur. Exportez le JSON pour publier la suppression.");
+    setStatus(fields.status, UI_TEXT[SITE_LANG].newsDeleted);
   });
 
   document.querySelectorAll("[data-format]").forEach((button) => {
@@ -483,11 +543,11 @@ async function initNewsPage() {
     saveStoredData(STORAGE_KEYS.news, newsItems);
     renderNewsList();
     downloadJson("actualites.json", newsItems);
-    setStatus(fields.status, "Fichier actualites.json exporté.");
+    setStatus(fields.status, UI_TEXT[SITE_LANG].newsExported);
   });
 
   fields.resetButton.addEventListener("click", () => {
-    if (!confirm("Revenir aux actualités publiées et oublier les modifications locales ?")) {
+    if (!confirm(UI_TEXT[SITE_LANG].resetNewsConfirm)) {
       return;
     }
     localStorage.removeItem(STORAGE_KEYS.news);
@@ -496,11 +556,11 @@ async function initNewsPage() {
     hidePanel(fields.editor);
     renderNewsOptions();
     renderNewsList();
-    setStatus(fields.status, "Données publiées restaurées.");
+    setStatus(fields.status, UI_TEXT[SITE_LANG].publishedDataRestored);
   });
 
   function renderNewsOptions() {
-    fields.select.innerHTML = `<option value="">Nouvelle actualité</option>`;
+    fields.select.innerHTML = `<option value="">${UI_TEXT[SITE_LANG].newNews}</option>`;
     sortNews(newsItems).forEach((item) => {
       const option = document.createElement("option");
       option.value = item.id;
@@ -514,15 +574,18 @@ async function initNewsPage() {
     sortNews(newsItems).forEach((item) => {
       const article = document.createElement("article");
       article.className = "news-entry";
+      const localizedTitle = getLocalizedNewsField(item, "title");
+      const localizedAudience = getLocalizedNewsField(item, "audience") || UI_TEXT[SITE_LANG].defaultAudience;
+      const localizedBody = getLocalizedNewsField(item, "body");
       article.innerHTML = `
         <div class="news-date">
           <span>${escapeHtml(formatDay(item.date))}</span>
           <small>${escapeHtml(formatMonthYear(item.date))}</small>
         </div>
         <div>
-          <h2>${escapeHtml(item.title)}</h2>
-          <p class="news-meta">Public cible: ${escapeHtml(item.audience || "Tous les collègues concernés")}</p>
-          <div class="news-body">${sanitizeRichHtml(item.body)}</div>
+          <h2>${escapeHtml(localizedTitle)}</h2>
+          <p class="news-meta">${UI_TEXT[SITE_LANG].newsTarget}: ${escapeHtml(localizedAudience)}</p>
+          <div class="news-body">${sanitizeRichHtml(localizedBody)}</div>
         </div>
       `;
       list.appendChild(article);
@@ -550,7 +613,7 @@ async function initNewsPage() {
     fields.date.value = new Date().toISOString().slice(0, 10);
     fields.title.value = "";
     fields.body.innerHTML = "";
-    fields.audience.value = "Tous les collègues concernés";
+    fields.audience.value = UI_TEXT[SITE_LANG].defaultAudience;
     fields.deleteButton.classList.add("is-hidden");
     setStatus(fields.status, "");
   }
@@ -562,20 +625,30 @@ async function initHomeNews() {
     return;
   }
 
-  const publishedNews = await loadJson("data/actualites.json", []);
+  const publishedNews = await loadJson(sitePath("data/actualites.json"), []);
   const newsItems = sortNews(normalizeNewsItems(getStoredData(STORAGE_KEYS.news) || publishedNews)).slice(0, 2);
   container.innerHTML = "";
 
   newsItems.forEach((item) => {
     const article = document.createElement("article");
     article.className = "news-item";
+    const localizedTitle = getLocalizedNewsField(item, "title");
+    const localizedBody = getLocalizedNewsField(item, "body");
     article.innerHTML = `
       <time datetime="${escapeAttribute(item.date)}">${escapeHtml(formatLongDate(item.date))}</time>
-      <h3>${escapeHtml(item.title)}</h3>
-      <div class="news-body">${sanitizeRichHtml(item.body)}</div>
+      <h3>${escapeHtml(localizedTitle)}</h3>
+      <div class="news-body">${sanitizeRichHtml(localizedBody)}</div>
     `;
     container.appendChild(article);
   });
+}
+
+function sitePath(path) {
+  if (/^(https?:|data:|mailto:|\/)/i.test(path)) {
+    return path;
+  }
+
+  return `${SITE_BASE_PATH}${path}`;
 }
 
 async function loadJson(url, fallbackValue) {
@@ -753,6 +826,17 @@ function normalizeNewsItems(items) {
   }));
 }
 
+function getLocalizedNewsField(item, field) {
+  if (SITE_LANG === "de") {
+    const germanField = `${field}De`;
+    if (item[germanField]) {
+      return item[germanField];
+    }
+  }
+
+  return item[field] || "";
+}
+
 function isSafeCssColor(value) {
   if (!value) {
     return false;
@@ -797,7 +881,7 @@ function makeSlug(value) {
 }
 
 function formatLongDate(dateValue) {
-  return new Intl.DateTimeFormat("fr-CH", {
+  return new Intl.DateTimeFormat(dateLocale(), {
     day: "numeric",
     month: "long",
     year: "numeric"
@@ -805,14 +889,18 @@ function formatLongDate(dateValue) {
 }
 
 function formatDay(dateValue) {
-  return new Intl.DateTimeFormat("fr-CH", { day: "2-digit" }).format(parseDate(dateValue));
+  return new Intl.DateTimeFormat(dateLocale(), { day: "2-digit" }).format(parseDate(dateValue));
 }
 
 function formatMonthYear(dateValue) {
-  return new Intl.DateTimeFormat("fr-CH", {
+  return new Intl.DateTimeFormat(dateLocale(), {
     month: "long",
     year: "numeric"
   }).format(parseDate(dateValue));
+}
+
+function dateLocale() {
+  return SITE_LANG === "de" ? "de-CH" : "fr-CH";
 }
 
 function parseDate(dateValue) {

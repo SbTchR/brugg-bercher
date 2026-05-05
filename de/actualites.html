@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aktuelles - Bercher-Brugg</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f6f78'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='24' font-weight='700' fill='white'%3EBB%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body data-base-path="../">
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Startseite Bercher-Brugg">
+      <span class="brand-mark">BB</span>
+      <span>
+        <strong>Bercher-Brugg</strong>
+        <small>Sprachaustausch</small>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="Hauptnavigation">
+      <a href="index.html">Startseite</a>
+      <a href="partenaires.html">Listen</a>
+      <a href="enseignants.html">Lehrpersonen</a>
+      <a href="actualites.html" aria-current="page">Aktuelles</a>
+      <a href="../bbcal/index.html">Kalender</a>
+      <a class="language-link" href="../actualites.html" hreflang="fr">FR</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-intro">
+      <p class="section-label">Wichtige Mitteilungen</p>
+      <h1>Aktuelles zum Austausch</h1>
+      <p>Hier werden wichtige Informationen aus E-Mails abgelegt, damit Kolleginnen und Kollegen sie schnell wiederfinden.</p>
+    </section>
+
+    <section class="news-page-list" id="news-list" aria-label="Liste der Mitteilungen"></section>
+
+    <section class="page-tools admin-tools" aria-label="Mitteilungen verwalten">
+      <button id="news-edit" type="button">Bearbeiten</button>
+      <button class="button subtle" id="news-export" type="button">Mitteilungen exportieren</button>
+      <button class="button subtle" id="news-reset" type="button">Veröffentlichte Daten wiederherstellen</button>
+    </section>
+
+    <section class="editor-panel is-hidden" id="news-editor" aria-labelledby="news-editor-title">
+      <div>
+        <h2 id="news-editor-title">Mitteilung erstellen oder bearbeiten</h2>
+        <p>Änderungen werden in diesem Browser gespeichert. Um sie für alle zu veröffentlichen, exportieren Sie die Daten und ersetzen Sie die Datei <strong>data/actualites.json</strong> im Repository.</p>
+      </div>
+      <form class="editor-form" id="news-form">
+        <input type="hidden" id="news-id">
+        <label>
+          Zu bearbeitende Mitteilung
+          <select id="news-select">
+            <option value="">Neue Mitteilung</option>
+          </select>
+        </label>
+        <div class="form-grid">
+          <label>
+            Datum
+            <input id="news-date" type="date" required>
+          </label>
+          <label>
+            Zielgruppe
+            <input id="news-audience" type="text" placeholder="Alle betroffenen Kolleginnen und Kollegen">
+          </label>
+        </div>
+        <label>
+          Titel
+          <input id="news-title" type="text" required>
+        </label>
+        <div class="field-group">
+          <span class="field-label" id="news-body-label">Nachricht</span>
+          <span class="rich-toolbar" aria-label="Formatierung der Nachricht">
+            <button type="button" data-format="bold">Fett</button>
+            <button type="button" data-format="italic">Kursiv</button>
+            <button type="button" data-format="underline">Unterstreichen</button>
+            <input id="news-color" type="color" value="#0f6f78" aria-label="Textfarbe">
+          </span>
+          <div id="news-body" class="rich-editor" contenteditable="true" role="textbox" aria-labelledby="news-body-label" aria-multiline="true" data-placeholder="Fügen Sie hier die wichtige Nachricht ein, die auf der Website bleiben soll."></div>
+        </div>
+        <div class="editor-actions">
+          <button type="submit">Mitteilung speichern</button>
+          <button class="button subtle" id="news-new-entry" type="button">Neue Mitteilung</button>
+          <button class="button danger" id="news-delete" type="button">Mitteilung löschen</button>
+          <button class="button subtle" id="news-cancel" type="button">Schliessen</button>
+        </div>
+        <p class="editor-status" id="news-status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Sprachaustausch Bercher-Brugg</p>
+    <p>Neue Mitteilungen oben in der Liste hinzufügen.</p>
+  </footer>
+
+  <script src="../site.js"></script>
+</body>
+</html>

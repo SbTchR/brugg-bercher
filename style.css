@@ -107,6 +107,11 @@ a {
   color: var(--primary-dark);
 }
 
+.main-nav .language-link {
+  border: 1px solid var(--border);
+  color: var(--primary-dark);
+}
+
 main {
   width: min(var(--max-width), calc(100% - 32px));
   margin: 0 auto;

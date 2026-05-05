@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lehrpersonen - Bercher-Brugg</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f6f78'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='24' font-weight='700' fill='white'%3EBB%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body data-base-path="../">
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Startseite Bercher-Brugg">
+      <span class="brand-mark">BB</span>
+      <span>
+        <strong>Bercher-Brugg</strong>
+        <small>Sprachaustausch</small>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="Hauptnavigation">
+      <a href="index.html">Startseite</a>
+      <a href="partenaires.html">Listen</a>
+      <a href="enseignants.html" aria-current="page">Lehrpersonen</a>
+      <a href="actualites.html">Aktuelles</a>
+      <a href="../bbcal/index.html">Kalender</a>
+      <a class="language-link" href="../enseignants.html" hreflang="fr">FR</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-intro">
+      <p class="section-label">Kontakte</p>
+      <h1>Lehrpersonen</h1>
+      <p>Diese Seite dient als gemeinsames Adressbuch, um die am Austausch beteiligten Kolleginnen und Kollegen schnell zu finden.</p>
+    </section>
+
+    <section class="teacher-grid" id="teacher-grid" aria-label="Profilkarten der Lehrpersonen"></section>
+
+    <section class="page-tools admin-tools" aria-label="Lehrpersonen verwalten">
+      <button id="teacher-edit" type="button">Bearbeiten</button>
+      <button class="button subtle" id="teacher-export" type="button">Einträge exportieren</button>
+      <button class="button subtle" id="teacher-reset" type="button">Veröffentlichte Daten wiederherstellen</button>
+    </section>
+
+    <section class="editor-panel is-hidden" id="teacher-editor" aria-labelledby="teacher-editor-title">
+      <div>
+        <h2 id="teacher-editor-title">Lehrperson bearbeiten</h2>
+        <p><strong>Administrationsbereich.</strong> Nur die Website-Administration sollte diese Einträge bearbeiten. Änderungen werden in diesem Browser gespeichert; das Foto wird beim JSON-Export einbezogen.</p>
+      </div>
+      <form class="editor-form" id="teacher-form">
+        <input type="hidden" id="teacher-id">
+        <div class="form-grid">
+          <label>
+            Lehrperson
+            <select id="teacher-select">
+              <option value="">Eintrag wählen</option>
+            </select>
+          </label>
+          <label>
+            Schule
+            <select id="teacher-school" required>
+              <option value="Bercher">Bercher</option>
+              <option value="Brugg">Brugg</option>
+            </select>
+          </label>
+          <label>
+            Vollständiger Name
+            <input id="teacher-name" type="text" required>
+          </label>
+          <label>
+            E-Mail-Adresse
+            <input id="teacher-email" type="email" required>
+          </label>
+        </div>
+        <label>
+          Persönlicher Text
+          <textarea id="teacher-description" rows="4" placeholder="Ein paar Worte zu Ihrer Rolle im Austausch oder zu Ihrer Sicht auf das Projekt."></textarea>
+        </label>
+        <label>
+          Foto
+          <input id="teacher-photo" type="file" accept="image/*">
+        </label>
+        <div class="editor-actions">
+          <button type="submit">Eintrag speichern</button>
+          <button class="button subtle" id="teacher-new-entry" type="button">Neuer Eintrag</button>
+          <button class="button subtle" id="teacher-clear-photo" type="button">Foto entfernen</button>
+          <button class="button danger" id="teacher-delete" type="button">Eintrag löschen</button>
+          <button class="button subtle" id="teacher-cancel" type="button">Schliessen</button>
+        </div>
+        <p class="editor-status" id="teacher-status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Sprachaustausch Bercher-Brugg</p>
+    <p>Lokale Änderungen können für die Veröffentlichung exportiert werden.</p>
+  </footer>
+
+  <script src="../site.js"></script>
+</body>
+</html>
