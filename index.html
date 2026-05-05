@@ -76,14 +76,18 @@
         </div>
       </div>
 
-<div>
-  <div class="section-heading compact">
-    <p class="section-label">Organisation</p>
-    <h2>Répartition des classes</h2>
-  </div>
+      <div>
+        <div class="section-heading compact">
+          <p class="section-label">Organisation</p>
+          <h2>Répartition des classes</h2>
+        </div>
 
-  <div class="table-wrap">
-    <table class="info-table">
+        <button class="button subtle organisation-button" type="button" data-organisation-open>
+          Organisation Bercher
+        </button>
+
+        <div class="table-wrap">
+          <table class="info-table">
       <thead>
         <tr>
           <th>Bercher</th>
@@ -205,9 +209,9 @@
           <td>Tanja Martin</td>
         </tr>
       </tbody>
-    </table>
-  </div>
-</div>
+          </table>
+        </div>
+      </div>
     </section>
 
     <section class="content-section home-lower-grid">
@@ -245,6 +249,17 @@
     <p>Échange linguistique Bercher-Brugg</p>
     <p>Site interne de référence pour les enseignants.</p>
   </footer>
+  <dialog class="organisation-dialog" aria-labelledby="organisation-dialog-title">
+    <div class="organisation-dialog-header">
+      <h2 id="organisation-dialog-title">Organisation Bercher</h2>
+      <button class="dialog-close" type="button" data-organisation-close aria-label="Fermer la fenêtre">Fermer</button>
+    </div>
+    <iframe
+      class="organisation-frame"
+      title="Graphique Organisation Bercher"
+      data-src="FonctionnementBercher.html"
+    ></iframe>
+  </dialog>
   <script src="site.js"></script>
 </body>
 </html>

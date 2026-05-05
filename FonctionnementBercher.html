@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Répartition allemand</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #d1d5db;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 28px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 32px;
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 750;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button.active {
+      background: #111827;
+      color: white;
+      border-color: #111827;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1px solid rgba(0,0,0,.15);
+    }
+
+    .swatch-vp { background: #bfdbfe; }
+    .swatch-class { background: #e5e7eb; }
+    .swatch-n1 { background: #bbf7d0; }
+    .swatch-n2 { background: #fed7aa; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.05);
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .year-title {
+      font-size: 24px;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .column-labels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 0 92px 1px 92px;
+      margin: 8px 0 -4px;
+      font-size: 13px;
+      font-weight: 850;
+      color: #4b5563;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .column-labels div:last-child {
+      text-align: right;
+    }
+
+    #chart {
+      width: 100%;
+      height: 680px;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 12px;
+      }
+
+      .toolbar {
+        display: none;
+      }
+
+      .card {
+        box-shadow: none;
+        max-width: none;
+      }
+
+      #chart {
+        height: 680px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Répartition des élèves en allemand</h1>
+  <p class="subtitle">
+    Classes de base → groupes d’allemand. Le survol d’un rectangle met en évidence ses liens.
+  </p>
+
+  <div class="toolbar">
+    <button class="active" data-year="9">9e</button>
+    <button data-year="10">10e</button>
+    <button data-year="11">11e</button>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="swatch swatch-vp"></span>VP</div>
+    <div class="legend-item"><span class="swatch swatch-class"></span>Classe VG</div>
+    <div class="legend-item"><span class="swatch swatch-n1"></span>Groupe niveau 1</div>
+    <div class="legend-item"><span class="swatch swatch-n2"></span>Groupe niveau 2</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="year-title" id="yearTitle">9e année</div>
+      <div class="hint">Survole une classe ou un groupe.</div>
+    </div>
+
+    <div class="column-labels">
+      <div>Classes de base</div>
+      <div>Groupes d’allemand</div>
+    </div>
+
+    <div id="chart"></div>
+
+    <div class="note">
+      Les flux ont tous la même épaisseur : ils indiquent les liens entre classes et groupes, pas les effectifs réels.
+    </div>
+  </div>
+
+  <script>
+    const COLORS = {
+      vpNode: "#bfdbfe",
+      classNode: "#e5e7eb",
+      n1Node: "#bbf7d0",
+      n2Node: "#fed7aa",
+
+      vpLink: "rgba(37, 99, 235, 0.32)",
+      n1Link: "rgba(22, 163, 74, 0.32)",
+      n2Link: "rgba(234, 88, 12, 0.32)",
+
+      vpBorder: "#2563eb",
+      classBorder: "#6b7280",
+      n1Border: "#16a34a",
+      n2Border: "#ea580c"
+    };
+
+    const DATA = {
+      9: {
+        title: "9e année",
+        vp: [
+          ["9VP1", "Raphaël"],
+          ["9VP2", "Aurélie"]
+        ],
+        vgClasses: ["9VG1", "9VG2", "9VG3", "9VG4"],
+        groups: [
+          { name: "9e N1 · Dana", level: 1, classes: ["9VG2", "9VG3"] },
+          { name: "9e N1 · Juliette", level: 1, classes: ["9VG1", "9VG3"] },
+          { name: "9e N1 · Aurélie", level: 1, classes: ["9VG3", "9VG4"] },
+          { name: "9e N2 · Mélanie", level: 2, classes: ["9VG2", "9VG4"] },
+          { name: "9e N2 · Sylvain", level: 2, classes: ["9VG1", "9VG3"] }
+        ]
+      },
+
+      10: {
+        title: "10e année",
+        vp: [
+          ["10VP1", "Juliette"],
+          ["10VP2", "Mélanie"]
+        ],
+        vgClasses: ["10VG1", "10VG2", "10VG3", "10VG4"],
+        groups: [
+          { name: "10e N1 · Dana", level: 1, classes: ["10VG1", "10VG2", "10VG3", "10VG4"] },
+          { name: "10e N1 · Sylvain", level: 1, classes: ["10VG1", "10VG2", "10VG3", "10VG4"] },
+          { name: "10e N1 · Marc", level: 1, classes: ["10VG1", "10VG2", "10VG3", "10VG4"] },
+          { name: "10e N2 · Juliette", level: 2, classes: ["10VG1", "10VG2", "10VG3", "10VG4"] },
+          { name: "10e N2 · Aurélie", level: 2, classes: ["10VG1", "10VG2", "10VG3"] }
+        ]
+      },
+
+      11: {
+        title: "11e année",
+        vp: [
+          ["11VP1", "Sylvain"],
+          ["11VP2", "Aurélie"]
+        ],
+        vgClasses: ["11VG1", "11VG2", "11VG3", "11VG4"],
+        groups: [
+          { name: "11e N1 · Dana", level: 1, classes: ["11VG1", "11VG2", "11VG3", "11VG4"] },
+          { name: "11e N1 · Marc", level: 1, classes: ["11VG1", "11VG2", "11VG3", "11VG4"] },
+          { name: "11e N1 · Aurélie", level: 1, classes: ["11VG1", "11VG2", "11VG3", "11VG4"] },
+          { name: "11e N2 · Juliette", level: 2, classes: ["11VG1", "11VG2", "11VG3", "11VG4"] },
+          { name: "11e N2 · Sylvain", level: 2, classes: ["11VG1", "11VG2", "11VG3", "11VG4"] }
+        ]
+      }
+    };
+
+    const chart = echarts.init(document.getElementById("chart"));
+
+    function buildSankeyData(yearData) {
+      const nodes = [];
+      const links = [];
+      const seen = new Set();
+
+      function addNode(name, type) {
+        if (seen.has(name)) return;
+
+        seen.add(name);
+
+        let color;
+        let borderColor;
+
+        if (type === "vp" || type === "vpGroup") {
+          color = COLORS.vpNode;
+          borderColor = COLORS.vpBorder;
+        } else if (type === "class") {
+          color = COLORS.classNode;
+          borderColor = COLORS.classBorder;
+        } else if (type === "n1") {
+          color = COLORS.n1Node;
+          borderColor = COLORS.n1Border;
+        } else {
+          color = COLORS.n2Node;
+          borderColor = COLORS.n2Border;
+        }
+
+        
+
+        nodes.push({
+          name,
+          value: 1,
+          depth: type === "vpGroup" || type === "n1" || type === "n2" ? 1 : 0,
+          itemStyle: {
+            color,
+            borderColor,
+            borderWidth: 2
+          },
+          label: {
+            formatter: name
+          }
+        });
+      }
+
+      // VP : classe de base → groupe d’allemand
+      yearData.vp.forEach(([className, teacher]) => {
+        const base = className;
+        const group = `${className}\n${teacher}`;
+
+        addNode(base, "vp");
+        addNode(group, "vpGroup");
+
+        links.push({
+          source: base,
+          target: group,
+          value: 1,
+          lineStyle: {
+            color: COLORS.vpLink,
+            opacity: 0.68,
+            curveness: 0.32
+          },
+          emphasis: {
+            disabled: true
+          },
+          tooltip: {
+            show: false
+          }
+        });
+      });
+
+      // VG classes
+      yearData.vgClasses.forEach(className => {
+        addNode(className, "class");
+      });
+
+      // VG groups
+      yearData.groups.forEach(group => {
+        const groupName = `${group.name}`;
+
+        addNode(groupName, group.level === 1 ? "n1" : "n2");
+
+        group.classes.forEach(className => {
+          links.push({
+            source: className,
+            target: groupName,
+            value: 1,
+            lineStyle: {
+              color: group.level === 1 ? COLORS.n1Link : COLORS.n2Link,
+              opacity: 0.68,
+              curveness: 0.32
+            },
+            emphasis: {
+              disabled: true
+            },
+            tooltip: {
+              show: false
+            }
+          });
+        });
+      });
+
+      return { nodes, links };
+    }
+
+    function render(year) {
+      const yearData = DATA[year];
+      document.getElementById("yearTitle").textContent = yearData.title;
+
+      const { nodes, links } = buildSankeyData(yearData);
+
+      const option = {
+        backgroundColor: "#ffffff",
+
+        tooltip: {
+          trigger: "item",
+          triggerOn: "mousemove",
+          confine: true,
+          formatter: function(params) {
+            if (params.dataType === "edge") {
+              return "";
+            }
+
+            return params.name.replaceAll("\n", "<br>");
+          }
+        },
+
+        series: [
+          {
+            type: "sankey",
+
+            left: "8%",
+            right: "12%",
+            top: "4%",
+            bottom: "5%",
+
+            nodeWidth: 92,
+            nodeGap: 22,
+            nodeAlign: "justify",
+
+            layoutIterations: 0,
+
+            draggable: false,
+
+            // Important :
+            // Le focus se fait seulement quand on survole un nœud.
+            // Les liens eux-mêmes ne doivent pas être traités comme des objets sélectionnables.
+            focusNodeAdjacency: "allEdges",
+
+            emphasis: {
+              focus: "adjacency",
+              lineStyle: {
+                opacity: 0.9
+              }
+            },
+
+            blur: {
+              itemStyle: {
+                opacity: 0.22
+              },
+              lineStyle: {
+                opacity: 0.08
+              },
+              label: {
+                opacity: 0.28
+              }
+            },
+
+            label: {
+              show: true,
+              color: "#111827",
+              fontSize: 14,
+              fontWeight: 800,
+              lineHeight: 18,
+              overflow: "break",
+              width: 120
+            },
+
+            itemStyle: {
+              borderRadius: 8,
+              shadowBlur: 7,
+              shadowColor: "rgba(0,0,0,0.07)"
+            },
+
+            lineStyle: {
+              color: "source",
+              opacity: 0.42,
+              curveness: 0.32
+            },
+
+            data: nodes,
+            links
+          }
+        ]
+      };
+
+      chart.setOption(option, true);
+    }
+
+    render(9);
+
+    document.querySelectorAll("button[data-year]").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("button[data-year]").forEach(b => b.classList.remove("active"));
+        button.classList.add("active");
+        render(button.dataset.year);
+      });
+    });
+
+    window.addEventListener("resize", () => chart.resize());
+  </script>
+</body>
+</html>

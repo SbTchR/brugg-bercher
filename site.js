@@ -64,7 +64,44 @@ document.addEventListener("DOMContentLoaded", () => {
   initTeacherPage();
   initNewsPage();
   initHomeNews();
+  initOrganisationDialog();
 });
+
+function initOrganisationDialog() {
+  const openButton = document.querySelector("[data-organisation-open]");
+  const dialog = document.querySelector(".organisation-dialog");
+  const closeButton = document.querySelector("[data-organisation-close]");
+  const frame = document.querySelector(".organisation-frame");
+
+  if (!openButton || !dialog || !closeButton || !frame) {
+    return;
+  }
+
+  const frameSrc = frame.dataset.src || "FonctionnementBercher.html";
+
+  openButton.addEventListener("click", () => {
+    if (!frame.src) {
+      frame.src = sitePath(frameSrc);
+    }
+
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+      return;
+    }
+
+    window.open(sitePath(frameSrc), "organisationBercher", "width=1180,height=820");
+  });
+
+  closeButton.addEventListener("click", () => {
+    dialog.close();
+  });
+
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) {
+      dialog.close();
+    }
+  });
+}
 
 function initPartnerLists() {
   const selectClass = document.getElementById("select-class");
