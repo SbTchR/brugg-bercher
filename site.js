@@ -691,6 +691,19 @@ function sanitizeRichHtml(html) {
   while (walker.nextNode()) nodes.push(walker.currentNode);
 
   nodes.forEach((node) => {
+    if (node.tagName === "FONT") {
+      const span = document.createElement("span");
+      const color = node.getAttribute("color");
+      if (isSafeCssColor(color)) {
+        span.style.color = color.trim();
+      }
+      while (node.firstChild) {
+        span.appendChild(node.firstChild);
+      }
+      node.replaceWith(span);
+      return;
+    }
+
     if (!allowedTags.has(node.tagName)) {
       node.replaceWith(document.createTextNode(node.textContent || ""));
       return;
@@ -728,6 +741,14 @@ function sanitizeRichHtml(html) {
   });
 
   return template.innerHTML.trim();
+}
+
+function isSafeCssColor(value) {
+  if (!value) {
+    return false;
+  }
+
+  return CSS.supports("color", value.trim());
 }
 
 function renderTeacherPhoto(teacher) {
