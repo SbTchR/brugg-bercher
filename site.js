@@ -369,7 +369,7 @@ async function initNewsPage() {
   }
 
   const publishedNews = await loadJson("data/actualites.json", []);
-  let newsItems = cloneData(getStoredData(STORAGE_KEYS.news) || publishedNews);
+  let newsItems = normalizeNewsItems(cloneData(getStoredData(STORAGE_KEYS.news) || publishedNews));
 
   const fields = {
     editor: document.getElementById("news-editor"),
@@ -426,8 +426,8 @@ async function initNewsPage() {
       newsItems.push(nextItem);
     }
 
-    saveStoredData(STORAGE_KEYS.news, sortNews(newsItems));
-    newsItems = sortNews(newsItems);
+    newsItems = sortNews(normalizeNewsItems(newsItems));
+    saveStoredData(STORAGE_KEYS.news, newsItems);
     fields.id.value = id;
     renderNewsOptions();
     renderNewsList();
@@ -479,7 +479,10 @@ async function initNewsPage() {
   });
 
   fields.exportButton.addEventListener("click", () => {
-    downloadJson("actualites.json", sortNews(newsItems));
+    newsItems = sortNews(normalizeNewsItems(newsItems));
+    saveStoredData(STORAGE_KEYS.news, newsItems);
+    renderNewsList();
+    downloadJson("actualites.json", newsItems);
     setStatus(fields.status, "Fichier actualites.json exporté.");
   });
 
@@ -488,7 +491,7 @@ async function initNewsPage() {
       return;
     }
     localStorage.removeItem(STORAGE_KEYS.news);
-    newsItems = cloneData(publishedNews);
+    newsItems = normalizeNewsItems(cloneData(publishedNews));
     setEmptyNewsForm();
     hidePanel(fields.editor);
     renderNewsOptions();
@@ -560,7 +563,7 @@ async function initHomeNews() {
   }
 
   const publishedNews = await loadJson("data/actualites.json", []);
-  const newsItems = sortNews(getStoredData(STORAGE_KEYS.news) || publishedNews).slice(0, 2);
+  const newsItems = sortNews(normalizeNewsItems(getStoredData(STORAGE_KEYS.news) || publishedNews)).slice(0, 2);
   container.innerHTML = "";
 
   newsItems.forEach((item) => {
@@ -743,12 +746,24 @@ function sanitizeRichHtml(html) {
   return template.innerHTML.trim();
 }
 
+function normalizeNewsItems(items) {
+  return (items || []).map((item) => ({
+    ...item,
+    body: sanitizeRichHtml(item.body || "")
+  }));
+}
+
 function isSafeCssColor(value) {
   if (!value) {
     return false;
   }
 
-  return CSS.supports("color", value.trim());
+  const color = value.trim();
+  if (/^#[0-9a-f]{3,8}$/i.test(color) || /^rgba?\(/i.test(color) || /^hsla?\(/i.test(color)) {
+    return true;
+  }
+
+  return typeof CSS !== "undefined" && CSS.supports && CSS.supports("color", color);
 }
 
 function renderTeacherPhoto(teacher) {

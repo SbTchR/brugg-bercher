@@ -786,6 +786,7 @@ textarea {
 }
 
 .news-entry h2 {
+  margin-bottom: 10px;
   font-size: 1.35rem;
 }
 
@@ -798,7 +799,7 @@ textarea {
   display: inline-flex;
   align-items: center;
   width: fit-content;
-  margin: 10px 0 14px !important;
+  margin: 0 0 14px !important;
   padding: 7px 10px;
   border-radius: 8px;
   background: var(--accent-soft);
