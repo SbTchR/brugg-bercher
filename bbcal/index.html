@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BBCal - Disponibilités Bercher-Brugg</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" data-action="go-view" data-view="compare" aria-label="Aller à la comparaison">
+          <span class="brand-mark" aria-hidden="true">BB</span>
+          <span>
+            <strong>BBCal</strong>
+            <small>Disponibilités communes Bercher-Brugg</small>
+          </span>
+        </a>
+
+        <div class="topbar-center">
+          <nav class="site-links" aria-label="Navigation du site Bercher-Brugg">
+            <a href="../index.html">Accueil</a>
+            <a href="../partenaires.html">Listes</a>
+            <a href="../enseignants.html">Enseignants</a>
+            <a href="../actualites.html">Actualités</a>
+            <a href="index.html" aria-current="page">Calendrier</a>
+          </nav>
+
+          <nav class="main-nav" aria-label="Navigation BBCal">
+            <button type="button" class="nav-button is-active" data-action="go-view" data-view="compare" data-i18n="navCompare">Comparer</button>
+            <button type="button" class="nav-button" data-action="go-view" data-view="availability" data-i18n="navAvailability">Disponibilités</button>
+            <button type="button" class="nav-button" data-action="go-view" data-view="schedules" data-i18n="navSchedules">Horaires</button>
+            <button type="button" class="nav-button" data-action="go-view" data-view="settings" data-i18n="navSettings">Paramètres</button>
+          </nav>
+        </div>
+
+        <div class="language-switch" aria-label="Langue">
+          <button type="button" class="lang-button is-active" data-action="set-language" data-lang="fr">FR</button>
+          <button type="button" class="lang-button" data-action="set-language" data-lang="de">DE</button>
+        </div>
+      </header>
+
+      <main id="app" class="workspace" tabindex="-1"></main>
+    </div>
+  </body>
+</html>
