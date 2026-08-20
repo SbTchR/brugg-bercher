@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    padding: 10px;
+    background: transparent;
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  .brugg-history {
+    --petrol: #176b70;
+    --petrol-dark: #10545a;
+    --teal: #2c8588;
+
+    --standard-bg: #ffffff;
+    --rotation-bg: #e4f5f2;
+    --meeting-bg: #e8f3f6;
+
+    --milestone: #138276;
+
+    --text: #24383a;
+    --line: #a7cfcb;
+
+    max-width: 900px;
+    margin: 0 auto;
+    color: var(--text);
+  }
+
+  .brugg-history * {
+    box-sizing: border-box;
+  }
+
+  .brugg-history h2 {
+    margin: 5px 0 30px;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--petrol-dark);
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 44px;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    background: linear-gradient(
+      to bottom,
+      #176b70,
+      #48a5a1,
+      #83c8bd
+    );
+    border-radius: 3px;
+  }
+
+  .year {
+    position: relative;
+    margin: 34px 0 14px -8px;
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--petrol-dark);
+  }
+
+  .event {
+    position: relative;
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    background: var(--standard-bg);
+    border: 1px solid #dbe9e8;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(22, 82, 83, 0.06);
+  }
+
+  .event::before {
+    content: "";
+    position: absolute;
+    left: -38px;
+    top: 19px;
+    width: 13px;
+    height: 13px;
+    background: #ffffff;
+    border: 4px solid var(--teal);
+    border-radius: 50%;
+  }
+
+  .date {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 3px 9px;
+    background: #edf8f7;
+    color: var(--petrol-dark);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.35px;
+  }
+
+  .event p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .event strong {
+    color: var(--petrol-dark);
+  }
+
+  /* ÉCHANGES PAR ROTATION */
+
+  .rotation {
+    background: var(--rotation-bg);
+    border-color: #c8e5df;
+  }
+
+  .rotation::before {
+    background: #79bdb1;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px #79bdb1;
+  }
+
+  .rotation .date {
+    background: rgba(255,255,255,0.75);
+  }
+
+  /* JOURNÉES / VISITES / RENCONTRES */
+
+  .meeting {
+    background: var(--meeting-bg);
+    border-color: #cbdfe3;
+  }
+
+  .meeting::before {
+    background: #659ca7;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px #659ca7;
+  }
+
+  .meeting .date {
+    background: rgba(255,255,255,0.75);
+  }
+
+  /* JALONS INSTITUTIONNELS */
+
+  .milestone {
+    padding: 18px 20px;
+    background: linear-gradient(
+      135deg,
+      #d6f1eb,
+      #edf9f6
+    );
+    border: 2px solid var(--milestone);
+    border-left: 7px solid var(--milestone);
+    box-shadow: 0 6px 18px rgba(16, 104, 98, 0.13);
+  }
+
+  .milestone::before {
+    width: 17px;
+    height: 17px;
+    left: -41px;
+    top: 21px;
+    background: var(--milestone);
+    border: 4px solid #ffffff;
+    box-shadow: 0 0 0 3px var(--milestone);
+  }
+
+  .milestone .date {
+    background: var(--petrol-dark);
+    color: white;
+  }
+
+  .milestone p {
+    font-size: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .brugg-history h2 {
+      font-size: 24px;
+    }
+
+    .timeline {
+      padding-left: 34px;
+    }
+
+    .timeline::before {
+      left: 9px;
+    }
+
+    .event::before {
+      left: -32px;
+    }
+
+    .milestone::before {
+      left: -35px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="brugg-history">
+
+  <h2>Une histoire qui se construit depuis 2019</h2>
+
+  <div class="timeline">
+
+    <div class="year">2019</div>
+
+    <div class="event">
+      <span class="date">Septembre 2019</span>
+      <p><strong>Premier contact</strong> entre les deux écoles et premiers échanges de lettres entre 2–3 classes.</p>
+    </div>
+
+
+    <div class="year">2020</div>
+
+    <div class="event rotation">
+      <span class="date">Mars 2020</span>
+      <p>Premiers <strong>échanges par rotation en 11e</strong> : 12 élèves de Bercher participent.</p>
+    </div>
+
+    <div class="event milestone">
+      <span class="date">Septembre 2020</span>
+      <p><strong>Première rencontre entre les directions.</strong> Élaboration d'un programme commun pour l'ensemble des élèves du cycle 3.</p>
+    </div>
+
+
+    <div class="year">2021</div>
+
+    <div class="event">
+      <span class="date">2021</span>
+      <p>Pause liée au Covid. Les rencontres sont suspendues, mais les <strong>échanges de lettres sont maintenus</strong>.</p>
+    </div>
+
+
+    <div class="year">2022</div>
+
+    <div class="event rotation">
+      <span class="date">Mars 2022</span>
+      <p>Échanges par rotation en 11e : 8 élèves de Bercher participent.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Juin 2022</span>
+      <p>Rencontre d'une journée à <strong>Brugg</strong> entre deux classes de 10VP.</p>
+    </div>
+
+
+    <div class="year">2023</div>
+
+    <div class="event rotation">
+      <span class="date">Mars 2023</span>
+      <p>Échanges par rotation : 16 élèves de Bercher participent.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Avril 2023</span>
+      <p>Visite à <strong>Bercher</strong> d'une classe de S1 (9VG) de Brugg.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Juin 2023</span>
+      <p>Journée de rencontre à <strong>Berne</strong> avec les 10VP : rallye en ville réunissant 158 élèves.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Août 2023</span>
+      <p>Journée de rencontre à <strong>Berne</strong> avec les 11VG : rallye en ville réunissant 138 élèves.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Décembre 2023</span>
+      <p>Visite de la <strong>centrale nucléaire de Gösgen</strong> et rencontre à l'école de Brugg avec toutes les classes de 10H.</p>
+    </div>
+
+
+    <div class="year">2024</div>
+
+    <div class="event rotation">
+      <span class="date">Mars 2024</span>
+      <p>Échanges par rotation : 14 élèves de Bercher participent.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Août 2024</span>
+      <p>Journée de rencontre à <strong>Lausanne</strong> avec les 11VG : rallye en ville réunissant 139 élèves.</p>
+    </div>
+
+    <div class="event milestone">
+      <span class="date">Automne 2024</span>
+      <p><strong>Signature de la convention officielle de partenariat</strong> entre les établissements de Bercher et de Brugg.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Novembre 2024</span>
+      <p>Journée de rencontre à <strong>Berne</strong> avec les 11VP : rallye en ville réunissant 126 élèves.</p>
+    </div>
+
+    <div class="event">
+      <span class="date">2024–2025</span>
+      <p>Un élève de Bercher effectue une <strong>12e année linguistique à Wetzikon (ZH)</strong>.</p>
+    </div>
+
+
+    <div class="year">2025</div>
+
+    <div class="event rotation">
+      <span class="date">Mars 2025</span>
+      <p>Échanges par rotation : 26 élèves de Bercher participent.</p>
+    </div>
+
+    <div class="event">
+      <span class="date">Mai 2025</span>
+      <p>Première tentative d'<strong>échanges virtuels par visioconférence</strong> en 10H.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Août 2025</span>
+      <p>Journée de rencontre à <strong>Fribourg</strong> avec les 11VG : rallye en ville réunissant 139 élèves.</p>
+    </div>
+
+    <div class="event meeting">
+      <span class="date">Septembre 2025</span>
+      <p>Journée de rencontre à <strong>Fribourg</strong> avec les 11VP : rallye en ville réunissant 135 élèves.</p>
+    </div>
+
+
+    <div class="year">2026</div>
+
+    <div class="event rotation">
+      <span class="date">Mars 2026</span>
+      <p>Échanges par rotation : 22 élèves de Bercher participent.</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
