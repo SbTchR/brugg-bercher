@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Répartition des classes | Bercher–Brugg</title>
+  <style>
+    :root { --ink:#17223b; --muted:#64718a; --line:#dbe8ef; --teal:#0d6876; --teal-soft:#ecfbf5; --accent:#b84c27; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:22px; background:#f7fbff; color:var(--ink); font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .card { max-width:1120px; margin:auto; padding:clamp(20px,4vw,38px); border:1px solid var(--line); border-radius:18px; background:#fff; box-shadow:0 12px 28px rgba(37,79,115,.1); }
+    .eyebrow { margin:0 0 7px; color:var(--accent); font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { margin:0; font-size:clamp(1.5rem,4vw,2.2rem); line-height:1.16; }
+    .intro { margin:10px 0 24px; color:var(--muted); }
+    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+    table { width:100%; min-width:620px; border-collapse:collapse; }
+    th,td { padding:13px 16px; text-align:left; border-bottom:1px solid var(--line); }
+    th { background:linear-gradient(135deg,#e5fbff,var(--teal-soft)); color:var(--teal); font-size:.84rem; letter-spacing:.03em; text-transform:uppercase; }
+    tbody tr:last-child td { border-bottom:0; }
+    tbody tr:hover { background:#fffaf0; }
+    .status { padding:20px; color:var(--muted); text-align:center; }
+    .error { color:#a63b25; }
+    @media (max-width:560px) { body{padding:10px}.card{padding:18px}.intro{font-size:.94rem} }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <p class="eyebrow">Bercher–Brugg</p>
+    <h1>Répartition des classes</h1>
+    <p class="intro">Cette vue est synchronisée avec la répartition publiée sur le site Brugg–Bercher.</p>
+    <div id="content" class="status" aria-live="polite">Chargement de la répartition…</div>
+  </main>
+  <script>
+    const content = document.getElementById('content');
+
+    fetch('../index.html')
+      .then(response => {
+        if (!response.ok) throw new Error('Chargement impossible');
+        return response.text();
+      })
+      .then(html => {
+        const page = new DOMParser().parseFromString(html, 'text/html');
+        const sourceTable = page.querySelector('.info-table');
+        if (!sourceTable) throw new Error('Tableau introuvable');
+
+        const table = sourceTable.cloneNode(true);
+        table.querySelectorAll('th').forEach((cell, index) => {
+          if (index === 1) cell.textContent = 'Enseignant·e Bercher';
+          if (index === 3) cell.textContent = 'Enseignant·e Brugg';
+        });
+        const wrap = document.createElement('div');
+        wrap.className = 'table-wrap';
+        wrap.appendChild(table);
+        content.replaceWith(wrap);
+      })
+      .catch(() => {
+        content.className = 'status error';
+        content.textContent = 'La répartition ne peut pas être chargée pour le moment.';
+      });
+  </script>
+</body>
+</html>

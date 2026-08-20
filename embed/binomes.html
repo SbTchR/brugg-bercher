@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Binômes d’élèves | Bercher–Brugg</title>
+  <style>
+    :root { --ink:#17223b; --muted:#64718a; --line:#dbe8ef; --teal:#0d6876; --teal-soft:#ecfbf5; --accent:#b84c27; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:22px; background:#f7fbff; color:var(--ink); font:16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .card { max-width:1120px; margin:auto; padding:clamp(20px,4vw,38px); border:1px solid var(--line); border-radius:18px; background:#fff; box-shadow:0 12px 28px rgba(37,79,115,.1); }
+    .eyebrow { margin:0 0 7px; color:var(--accent); font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { margin:0; font-size:clamp(1.5rem,4vw,2.2rem); line-height:1.16; }
+    .intro { margin:10px 0 20px; color:var(--muted); }
+    label { display:block; margin-bottom:7px; color:var(--teal); font-size:.88rem; font-weight:800; }
+    select { width:min(440px,100%); padding:11px 13px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink); font:inherit; }
+    .list { margin-top:22px; }
+    .class-section { margin:0; }
+    .class-header { margin:0 0 12px; font-weight:800; color:var(--teal); }
+    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+    table { width:100%; min-width:680px; border-collapse:collapse; }
+    th,td { padding:12px 15px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    th { background:linear-gradient(135deg,#e5fbff,var(--teal-soft)); color:var(--teal); font-size:.82rem; letter-spacing:.03em; text-transform:uppercase; }
+    tbody tr:last-child td { border-bottom:0; }
+    tbody tr:hover { background:#fffaf0; }
+    .status { padding:20px; color:var(--muted); text-align:center; }
+    .error { color:#a63b25; }
+    @media (max-width:560px) { body{padding:10px}.card{padding:18px}.intro{font-size:.94rem} }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <p class="eyebrow">Bercher–Brugg</p>
+    <h1>Binômes d’élèves</h1>
+    <p class="intro">Choisissez une classe. La liste affichée est lue directement depuis la liste publiée sur le site Brugg–Bercher.</p>
+    <label for="class-select">Classe</label>
+    <select id="class-select" disabled><option>Chargement…</option></select>
+    <div id="content" class="list status" aria-live="polite">Chargement des binômes…</div>
+  </main>
+  <script>
+    const content = document.getElementById('content');
+    const select = document.getElementById('class-select');
+    let sections = [];
+
+    fetch('../listes.html')
+      .then(response => {
+        if (!response.ok) throw new Error('Chargement impossible');
+        return response.text();
+      })
+      .then(html => {
+        const page = new DOMParser().parseFromString(html, 'text/html');
+        sections = [...page.querySelectorAll('.class-section')].filter(section => {
+          const rows = section.querySelectorAll('tbody tr');
+          return rows.length > 0;
+        });
+        if (!sections.length) throw new Error('Aucune liste trouvée');
+
+        select.innerHTML = '';
+        sections.forEach((section, index) => {
+          const option = document.createElement('option');
+          option.value = index;
+          option.textContent = className(section);
+          select.appendChild(option);
+        });
+        select.disabled = false;
+        showSection(0);
+      })
+      .catch(() => {
+        content.className = 'list status error';
+        content.textContent = 'Les binômes ne peuvent pas être chargés pour le moment.';
+        select.innerHTML = '<option>Indisponible</option>';
+      });
+
+    select.addEventListener('change', () => showSection(Number(select.value)));
+
+    function className(section) {
+      return (section.querySelector('.class-header')?.textContent || 'Classe')
+        .replace('Classe/Groupe :', '').trim();
+    }
+
+    function showSection(index) {
+      const section = sections[index].cloneNode(true);
+      const header = section.querySelector('.class-header');
+      if (header) header.textContent = `Classe : ${className(section)}`;
+      const table = section.querySelector('table');
+      const wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      wrap.appendChild(table);
+      section.appendChild(wrap);
+      content.replaceChildren(section);
+      content.className = 'list';
+    }
+  </script>
+</body>
+</html>
